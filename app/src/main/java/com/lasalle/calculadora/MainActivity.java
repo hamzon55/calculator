@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
     int valueOne, valueTwo, mValue, result;
     String type;
+    MathOperations p = new MathOperations();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (resultado.length() > 0) {
                     mValue = Integer.parseInt(resultado.getText() + "");
-                    resultado.setText("("+mValue * (-1) + "");
+                    resultado.setText("(" + mValue * (-1) + "");
 
 
                 }
@@ -119,54 +121,49 @@ public class MainActivity extends AppCompatActivity {
         igual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
 
+                    valueTwo = Integer.parseInt(resultado.getText() + "");
 
-                valueTwo = Integer.parseInt(resultado.getText() + "");
+                    if (bplus == true) {
+                        type = "+";
 
-                if (bplus == true) {
-                    type = "+";
-                    try {
-                        result = sum(valueOne, valueTwo);
+                        result = p.sum(valueOne, valueTwo);
                         resultado.setText(result + "");
                         bplus = false;
-                    } catch (MyOverflowException e) {
-                        Toast toast1 =
-                                Toast.makeText(getApplicationContext(),
-                                        e.getMessage(), Toast.LENGTH_SHORT);
-                        toast1.show();
-                    }
-                }
-                if (bmenos == true) {
-                    type = "-";
-                    result = valueOne - valueTwo;
-                    resultado.setText(result + "");
-                    bmenos = false;
-                }
-                if (bmultiple == true) {
-                    type = "*";
 
-                    try {
-                        result = multiplicar(valueOne, valueTwo);
+                    }
+                    if (bmenos == true) {
+                        type = "-";
+                        result = p.restar(valueOne, valueTwo);
+                        resultado.setText(result + "");
+                        bmenos = false;
+                    }
+                    if (bmultiple == true) {
+                        type = "*";
+
+
+                        result = p.multiplicar(valueOne, valueTwo);
                         resultado.setText(result + "");
                         bmultiple = false;
 
-
-                    } catch (MyOverflowException e) {
-                        Toast toast1 =
-                                Toast.makeText(getApplicationContext(),
-                                        e.getMessage(), Toast.LENGTH_SHORT);
-                        toast1.show();
+                    }
+                    if (bdiv == true) {
+                        result = valueOne / valueTwo;
+                        type = "/";
+                        resultado.setText(result + "");
+                        bdiv = false;
                     }
 
-                }
-                if (bdiv == true) {
-                    result = valueOne / valueTwo;
-                    type = "/";
-                    resultado.setText(result + "");
-                    bdiv = false;
+                    operations.add(new Operation(type, valueOne, valueTwo, result));
+
+                } catch (MathOperations.MyOverflowException e) {
+                    Toast toast1 =
+                            Toast.makeText(getApplicationContext(),
+                                    e.getMessage(), Toast.LENGTH_SHORT);
+                    toast1.show();
                 }
 
-                operations.add(new Operation(type, valueOne, valueTwo, result));
             }
         });
 
@@ -260,34 +257,12 @@ public class MainActivity extends AppCompatActivity {
         b9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resultado.setText(resultado.getText()+"9");
+                resultado.setText(resultado.getText() + "9");
             }
         });
     }
 
-    private int sum(int a, int b) throws MyOverflowException {
-        long r = (long) a + b;
-        if (r >>> 32 != 0) {    // no sign extension
-            throw new MyOverflowException(a, b);
-        }
-        return (int) r;
-    }
 
-
-    private int multiplicar(int a, int b) throws MyOverflowException {
-        long r = (long) a * b;
-        if (r >>> 32 != 0) {    // no sign extension
-            throw new MyOverflowException(a, b);
-        }
-        return (int) r;
-    }
-
-
-    private class MyOverflowException extends Exception {
-        public MyOverflowException(int a, int b) {
-            super("Error");
-        }
-    }
 }
 
 
