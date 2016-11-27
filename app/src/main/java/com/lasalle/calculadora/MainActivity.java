@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (resultado.length() > 0) {
                     mValue = Integer.parseInt(resultado.getText() + "");
-                    resultado.setText("(" + mValue * (-1) + "");
+                    resultado.setText(mValue * (-1) + "");
 
 
                 }
